@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
     color: #333;
     line-height: 1.6;
@@ -8,7 +8,7 @@ body {
 
 header, h2 {
     text-align: center;
-    color: #0056b3;
+    color: #333;
 }
 
 main {
@@ -34,19 +34,11 @@ main {
     font-weight: bold;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
 .btn-submit {
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #0056b3;
+    background-color: #d9534f;
     color: white;
     border: none;
     border-radius: 4px;
@@ -55,7 +47,7 @@ main {
 }
 
 .btn-submit:hover {
-    background-color: #004494;
+    background-color: #c9302c;
 }
 
 hr {
@@ -73,12 +65,6 @@ table {
     border-collapse: collapse;
 }
 
-th, td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
-
 th {
     background-color: #f0f0f0;
     font-weight: bold;
@@ -86,4 +72,138 @@ th {
 
 tbody tr:hover {
     background-color: #f9f9f9;
+}
+
+.form-group select,
+.form-group textarea,
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.filter-form {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.filter-form label {
+    font-weight: bold;
+}
+.filter-form select {
+    padding: 8px;
+}
+.filter-form button {
+    padding: 8px 12px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.filter-form button:hover {
+    background-color: #333;
+}
+
+.plot-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.plot-container img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-delete {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: #d9534f;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+}
+.btn-delete:hover {
+    background-color: #c9302c;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.btn-edit {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: #337ab7;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    margin-right: 5px;
+}
+.btn-edit:hover {
+    background-color: #286090;
+}
+
+.action-buttons {
+    text-align: center;
+}
+
+.btn-cancel {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #777;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+.btn-cancel:hover {
+    background-container: #555;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    word-break: break-word;
+}
+
+th:last-child,
+td:last-child {
+    width: 120px;
+    text-align: center;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
 }
