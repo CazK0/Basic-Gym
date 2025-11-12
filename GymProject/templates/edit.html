@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Workout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <h1>Edit Workout Log</h1>
+    </header>
+
+    <main>
+        <form action="/edit/{{ workout['id'] }}" method="POST" class="workout-form">
+            <h2>Editing Log #{{ workout['id'] }}</h2>
+
+            <div class="form-group">
+                <label for="exercise">Exercise:</label>
+                <select id="exercise" name="exercise" required>
+                    {% for ex in exercises %}
+                        <option value="{{ ex }}" {% if ex == workout['Exercise'] %}selected{% endif %}>
+                            {{ ex }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sets">Sets:</label>
+                    <input type="number" id="sets" name="sets" value="{{ workout['Sets'] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="reps">Reps:</label>
+                    <input type="number" id="reps" name="reps" value="{{ workout['Reps'] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" id="weight" name="weight" step="0.5" value="{{ workout['Weight'] }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes" rows="3">{{ workout['Notes'] }}</textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Save Changes</button>
+            <a href="/" class="btn-cancel">Cancel</a>
+        </form>
+    </main>
+
+</body>
+</html>
