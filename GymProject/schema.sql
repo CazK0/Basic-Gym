@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS workouts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Date TEXT NOT NULL,
+    Exercise TEXT NOT NULL,
+    Sets INTEGER NOT NULL,
+    Reps INTEGER NOT NULL,
+    Weight REAL NOT NULL,
+    Notes TEXT
+);
