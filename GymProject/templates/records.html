@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Records</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <h1>Personal Records (All-Time Best)</h1>
+        <nav>
+            <a href="/" class="nav-link">Home</a>
+            <a href="/records" class="nav-link">Personal Records</a>
+            <a href="/manage_templates" class="nav-link">Manage Templates</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="log-history">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exercise</th>
+                        <th>Weight (kg)</th>
+                        <th>Sets</th>
+                        <th>Reps</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pr in records %}
+                    <tr>
+                        <td><strong>{{ pr['Exercise'] }}</strong></td>
+                        <td><strong>{{ pr['Weight'] }}</strong></td>
+                        <td>{{ pr['Sets'] }}</td>
+                        <td>{{ pr['Reps'] }}</td>
+                        <td>{{ pr['Date'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+</body>
+</html>
