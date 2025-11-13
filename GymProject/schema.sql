@@ -4,6 +4,17 @@ CREATE TABLE IF NOT EXISTS workouts (
     Exercise TEXT NOT NULL,
     Sets INTEGER NOT NULL,
     Reps INTEGER NOT NULL,
-    Weight REAL NOT NULL,
-    Notes TEXT
+    Weight REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS templates (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS template_exercises (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    template_id INTEGER NOT NULL,
+    exercise_name TEXT NOT NULL,
+    FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
 );
