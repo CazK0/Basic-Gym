@@ -11,9 +11,28 @@
 
     <header>
         <h1>My Workout Log</h1>
+        <nav>
+            <a href="/" class="nav-link">Home</a>
+            <a href="/records" class="nav-link">Personal Records</a>
+            <a href="/manage_templates" class="nav-link">Manage Templates</a>
+        </nav>
     </header>
 
     <main>
+        <div class="template-loader">
+            <h3>Load Workout Template</h3>
+            <form action="/load_template" method="POST" class="template-form">
+                <select name="template_id" required>
+                    <option value="" disabled selected>Select a template...</option>
+                    {% for template in templates %}
+                    <option value="{{ template.id }}">{{ template.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn-template">Load</button>
+            </form>
+        </div>
+        <hr>
+
         <form action="/" method="POST" class="workout-form">
             <h2>Log a New Workout</h2>
 
@@ -41,11 +60,6 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="notes">Notes:</label>
-                <textarea id="notes" name="notes" rows="3"></textarea>
-            </div>
-
             <button type="submit" class="btn-submit">Log Workout</button>
         </form>
 
@@ -55,16 +69,26 @@
             <h2>Workout History</h2>
 
             <form action="/" method="GET" class="filter-form">
-                <label for="filter_exercise">Filter by Exercise:</label>
-                <select id="filter_exercise" name="filter_exercise">
-                    <option value="All">Show All</option>
-                    {% for ex in exercises %}
-                        <option value="{{ ex }}" {% if ex == current_filter %}selected{% endif %}>
-                            {{ ex }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Filter</button>
+                <div class="filter-group">
+                    <label for="filter_exercise">Exercise:</label>
+                    <select id="filter_exercise" name="filter_exercise">
+                        <option value="All">Show All</option>
+                        {% for ex in exercises %}
+                            <option value="{{ ex }}" {% if ex == current_filter %}selected{% endif %}>
+                                {{ ex }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="date_from">From:</label>
+                    <input type="date" id="date_from" name="date_from" value="{{ current_date_from or '' }}">
+                </div>
+                <div class="filter-group">
+                    <label for="date_to">To:</label>
+                    <input type="date" id="date_to" name="date_to" value="{{ current_date_to or '' }}">
+                </div>
+                <button type="submit" class="btn-filter">Filter</button>
             </form>
 
             {% if plot_url %}
@@ -82,7 +106,6 @@
                         <th>Sets</th>
                         <th>Reps</th>
                         <th>Weight (kg)</th>
-                        <th>Notes</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -94,7 +117,6 @@
                         <td>{{ workout['Sets'] }}</td>
                         <td>{{ workout['Reps'] }}</td>
                         <td>{{ workout['Weight'] }}</td>
-                        <td>{{ workout['Notes'] }}</td>
                         <td class="action-buttons">
                             <a href="/edit/{{ workout['id'] }}" class="btn-edit">Edit</a>
                             <a href="/delete/{{ workout['id'] }}" class="btn-delete"
