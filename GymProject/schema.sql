@@ -18,3 +18,14 @@ CREATE TABLE IF NOT EXISTS template_exercises (
     exercise_name TEXT NOT NULL,
     FOREIGN KEY (template_id) REFERENCES templates (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS exercises (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+
+INSERT OR IGNORE INTO exercises (name) VALUES
+('Squat'), ('Bench Press'), ('Deadlift'), ('Overhead Press'),
+('Leg Press'), ('Bicep Curl'), ('Tricep Extension'),
+('Lat Pulldown'), ('Seated Row'), ('Dips'),
+('Pec Fly'), ('Press Ups'), ('Pull Ups');
