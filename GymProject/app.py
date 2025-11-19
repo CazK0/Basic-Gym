@@ -9,11 +9,6 @@ from datetime import datetime
 app = Flask(__name__)
 
 DATABASE = 'workouts.db'
-EXERCISE_LIST = [
-    'Squat', 'Bench Press', 'Deadlift', 'Overhead Press', 'Leg Press',
-    'Bicep Curl', 'Tricep Extension', 'Lat Puldown', 'Seated Row', 'Other',
-    'Dips', 'Pec Fly', 'Press Ups', 'Pull Ups', 'Row\'s', 'Rear Delt Fly'
-]
 
 
 def get_db():
@@ -84,21 +79,47 @@ def index():
     query += ' ORDER BY Date DESC, id DESC'
 
     workouts = db.execute(query, params).fetchall()
-
     plot_url = create_plot(workouts, filter_exercise)
 
     templates = db.execute('SELECT * FROM templates ORDER BY name').fetchall()
+    exercises = db.execute('SELECT name FROM exercises ORDER BY name').fetchall()
 
     return render_template(
         'index.html',
         workouts=workouts,
         templates=templates,
-        exercises=EXERCISE_LIST,
+        exercises=exercises,
         current_filter=filter_exercise,
         current_date_from=date_from,
         current_date_to=date_to,
         plot_url=plot_url
     )
+
+
+@app.route('/manage_exercises', methods=['GET', 'POST'])
+def manage_exercises():
+    db = get_db()
+
+    if request.method == 'POST':
+        new_exercise = request.form['new_exercise']
+        if new_exercise:
+            try:
+                db.execute('INSERT INTO exercises (name) VALUES (?)', (new_exercise,))
+                db.commit()
+            except sqlite3.IntegrityError:
+                pass
+        return redirect(url_for('manage_exercises'))
+
+    exercises = db.execute('SELECT * FROM exercises ORDER BY name').fetchall()
+    return render_template('manage_exercises.html', exercises=exercises)
+
+
+@app.route('/delete_exercise/<int:id>')
+def delete_exercise(id):
+    db = get_db()
+    db.execute('DELETE FROM exercises WHERE id = ?', (id,))
+    db.commit()
+    return redirect(url_for('manage_exercises'))
 
 
 @app.route('/load_template', methods=['POST'])
@@ -126,14 +147,11 @@ def load_template():
 @app.route('/records')
 def records():
     db = get_db()
-
-    distinct_exercises = db.execute(
-        'SELECT DISTINCT Exercise FROM workouts ORDER BY Exercise'
-    ).fetchall()
+    distinct_exercises = db.execute('SELECT name FROM exercises ORDER BY name').fetchall()
 
     personal_records = []
     for ex in distinct_exercises:
-        exercise_name = ex['Exercise']
+        exercise_name = ex['name']
         pr = db.execute(
             'SELECT * FROM workouts WHERE Exercise = ? ORDER BY Weight DESC LIMIT 1',
             (exercise_name,)
@@ -171,18 +189,20 @@ def manage_templates():
         return redirect(url_for('manage_templates'))
 
     templates_raw = db.execute('SELECT * FROM templates ORDER BY name').fetchall()
+    exercises = db.execute('SELECT name FROM exercises ORDER BY name').fetchall()
+
     templates = []
     for t in templates_raw:
-        exercises = db.execute(
+        t_exercises = db.execute(
             'SELECT * FROM template_exercises WHERE template_id = ? ORDER BY exercise_name',
             (t['id'],)
         ).fetchall()
-        templates.append({'id': t['id'], 'name': t['name'], 'exercises': exercises})
+        templates.append({'id': t['id'], 'name': t['name'], 'exercises': t_exercises})
 
     return render_template(
         'manage_templates.html',
         templates=templates,
-        exercises_list=EXERCISE_LIST
+        exercises_list=exercises
     )
 
 
@@ -228,6 +248,7 @@ def edit_log(id):
         return redirect(url_for('index'))
 
     workout = db.execute('SELECT * FROM workouts WHERE id = ?', (id,)).fetchone()
+    exercises = db.execute('SELECT name FROM exercises ORDER BY name').fetchall()
 
     if workout is None:
         return redirect(url_for('index'))
@@ -235,7 +256,7 @@ def edit_log(id):
     return render_template(
         'edit.html',
         workout=workout,
-        exercises=EXERCISE_LIST
+        exercises=exercises
     )
 
 
@@ -245,18 +266,16 @@ def create_plot(workouts, filter_exercise):
 
     try:
         df = pd.DataFrame(workouts, columns=['id', 'Date', 'Exercise', 'Sets', 'Reps', 'Weight'])
-
         df['Weight'] = pd.to_numeric(df['Weight'])
         df['Date'] = pd.to_datetime(df['Date'])
-
         df = df.sort_values(by='Date')
 
         plt.figure(figsize=(10, 5))
-        plt.plot(df['Date'], df['Weight'], marker='o', linestyle='-')
-        plt.title(f'Progress for {filter_exercise}')
+        plt.plot(df['Date'], df['Weight'], marker='o', linestyle='-', linewidth=2, color='#007bff')
+        plt.title(f'Progress for {filter_exercise}', fontweight='bold')
         plt.xlabel('Date')
         plt.ylabel('Weight (kg)')
-        plt.grid(True)
+        plt.grid(True, alpha=0.3)
         plt.tight_layout()
 
         img = io.BytesIO()
